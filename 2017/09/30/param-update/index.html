@@ -3,20 +3,20 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>scp 断点续传 | 康行天下</title>
+  <title>参数更新 | 康行天下</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
-<meta name="keywords" content="linux cmd">
+  <meta name="description" content="学习率(一阶) 初始值通常设置在1e-3,在学习过程中随着时间降低学习率通常很有用, 降低学习率的方式有:  递减step decay  每几个epoch降低一次,如每5次降低一半,或每20次降低0.1,视情况而定.可以通过尝试不同的固定的学习率对验证集的错误率进行观察来找合适的学习率.  指数下降  \(\alpha = \alpha_0 e^{-k t}\),t是迭代次数,其它是超参数.  1">
+<meta name="keywords" content="Deep Learning">
 <meta property="og:type" content="article">
-<meta property="og:title" content="scp 断点续传">
-<meta property="og:url" content="makefile.ml/2017/09/30/tunnel-3/index.html">
+<meta property="og:title" content="参数更新">
+<meta property="og:url" content="makefile.ml/2017/09/30/param-update/index.html">
 <meta property="og:site_name" content="康行天下">
-<meta property="og:description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
+<meta property="og:description" content="学习率(一阶) 初始值通常设置在1e-3,在学习过程中随着时间降低学习率通常很有用, 降低学习率的方式有:  递减step decay  每几个epoch降低一次,如每5次降低一半,或每20次降低0.1,视情况而定.可以通过尝试不同的固定的学习率对验证集的错误率进行观察来找合适的学习率.  指数下降  \(\alpha = \alpha_0 e^{-k t}\),t是迭代次数,其它是超参数.  1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-02-06T06:38:02.456Z">
+<meta property="og:updated_time" content="2018-02-06T08:23:00.986Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="scp 断点续传">
-<meta name="twitter:description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
+<meta name="twitter:title" content="参数更新">
+<meta name="twitter:description" content="学习率(一阶) 初始值通常设置在1e-3,在学习过程中随着时间降低学习率通常很有用, 降低学习率的方式有:  递减step decay  每几个epoch降低一次,如每5次降低一半,或每20次降低0.1,视情况而定.可以通过尝试不同的固定的学习率对验证集的错误率进行观察来找合适的学习率.  指数下降  \(\alpha = \alpha_0 e^{-k t}\),t是迭代次数,其它是超参数.  1">
   
     <link rel="alternative" href="/atom.xml" title="康行天下" type="application/atom+xml">
   
@@ -212,10 +212,10 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-tunnel-3" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-param-update" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/09/30/tunnel-3/" class="article-date">
+      <a href="/2017/09/30/param-update/" class="article-date">
       <time datetime="2017-09-30T00:00:00.000Z" itemprop="datePublished">2017-09-30</time>
 </a>
     </div>
@@ -229,7 +229,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      scp 断点续传
+      参数更新
     </h1>
   
 
@@ -240,7 +240,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-cmd/">linux cmd</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Deep-Learning/">Deep Learning</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -250,14 +250,83 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>在之前的两篇博文<a href="http://www.cnblogs.com/makefile/p/ssh-rev-tun.html" target="_blank" rel="noopener">ssh反向隧道</a>和<a href="http://www.cnblogs.com/makefile/p/ngrok.html" target="_blank" rel="noopener">ngrok反向隧道</a>中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。</p>
-<p>本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。</p>
-<h2 id="n2n">n2n</h2>
-<p>v1版本的用法 <code>sudo apt install -y n2n</code> <code>sudo edge -d edge1 -a 10.0.0.99 -c 组名 -k 密码 -s 255.255.255.0 -l bytemark.leggewie.org:1234</code> 之前使用ipv6地址在两台主机间用scp复制文件时约7~10M/s,使用n2n的地址进行scp的速度仅能达到1M/s.说明p2p打洞没有成功。 -d 指定将要创建的本地接口， -a 是想要得到的ip，同时需要使用-s指定子网掩码 -l 指定超级节点的地址，如n2n.lu8.win:10082 来自（http://nat.red/）</p>
-<h2 id="frp">frp</h2>
-<p>frp的新版本增加了对p2p的支持。与n2n的用法类似，将多个主机组建到一个内网。</p>
-<h2 id="bittorrent-sync">Bittorrent Sync</h2>
-<p>主要功能是同步，也是点对点，没有中心服务节点。</p>
+        <h2 id="学习率一阶">学习率(一阶)</h2>
+<p>初始值通常设置在1e-3,在学习过程中随着时间降低学习率通常很有用,</p>
+<p>降低学习率的方式有:</p>
+<ul>
+<li>递减step decay</li>
+</ul>
+<p>每几个epoch降低一次,如每5次降低一半,或每20次降低0.1,视情况而定.可以通过尝试不同的固定的学习率对验证集的错误率进行观察来找合适的学习率.</p>
+<ul>
+<li>指数下降</li>
+</ul>
+<p><span class="math inline">\(\alpha = \alpha_0 e^{-k t}\)</span>,t是迭代次数,其它是超参数.</p>
+<ul>
+<li>1/t下降</li>
+</ul>
+<p><span class="math inline">\(\alpha = \alpha_0 / (1 + k t )\)</span></p>
+<p>实际中step decay更常用一些,因为参数更容易解释,更直观.无非是设置较小的递减速率,训练更长的时间.</p>
+<h2 id="权重更新方法一阶">权重更新方法(一阶)</h2>
+<h3 id="vanilla-update">Vanilla update</h3>
+<p>（vanilla作为形容词，意思是普通的，平凡的） 沿着负梯度方向更新参数以最小化损失.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vanilla update,learning_rate是超参数</span></span><br><span class="line">x += - learning_rate * dx</span><br></pre></td></tr></table></figure>
+<h3 id="momentum-update"><strong>Momentum update</strong></h3>
+<p>比上述的GD方式收敛速度快:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Momentum update</span></span><br><span class="line">v = mu * v - learning_rate * dx <span class="comment"># integrate velocity</span></span><br><span class="line">x += v <span class="comment"># integrate position</span></span><br></pre></td></tr></table></figure>
+<p>其中变量v初始值为0,mu是一个超参数,称为动量(<em>momentum</em>),常用值是0.9.</p>
+<p>对其进行调优可以从0.5作为初始值,再依次尝试[0.9, 0.95, 0.99],(模拟退火的过程). 形象的解释为：重力作用使其震荡的幅度减小，加速下降。 ### Nesterov Momentum</p>
+<p>比上面的momentum更新方式表现的更好一些,改进之处在于将计算梯度的位置x转移到了动量更新之后:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x_ahead = x + mu * v</span><br><span class="line"><span class="comment"># evaluate dx_ahead (the gradient at x_ahead instead of at x)</span></span><br><span class="line">v = mu * v - learning_rate * dx_ahead</span><br><span class="line">x += v</span><br></pre></td></tr></table></figure>
+<h3 id="nesterovs-accelerated-momentum-nag">Nesterov's Accelerated Momentum (NAG)</h3>
+<p>效果更好,进一步阅读:</p>
+<ul>
+<li><a href="http://arxiv.org/pdf/1212.0901v2.pdf" target="_blank" rel="noopener">Advances in optimizing Recurrent Networks</a> by Yoshua Bengio, Section 3.5.</li>
+<li><a href="http://www.cs.utoronto.ca/~ilya/pubs/ilya_sutskever_phd_thesis.pdf" target="_blank" rel="noopener">Ilya Sutskever's thesis</a> (pdf) contains a longer exposition of the topic in section 7.2</li>
+</ul>
+<h3 id="adagrad">AdaGrad</h3>
+<p>v += dx^2 x += - learning_rate * dx/sqrt(v) 是在学习率上进行调整，相当于由于一次性移动dx太大而加的惩罚，增加对震荡的阻力。</p>
+<h3 id="rmsprop">RMSProp</h3>
+<p>结合了Momentum与AdaGrad： v = mu * v + (1-mu) * dx^2 x += - learning_rate * dx/sqrt(v)</p>
+<h3 id="adam">Adam</h3>
+<p>RMSProp + momentum 在RMSProp中没有完全运用Momentum,继续修改后变为： m = mu1 * m + (1-mu1) * dx v = mu2 * v + (1-mu2) * dx^2 x += - learning_rate * m/sqrt(v)</p>
+<h3 id="eve"><a href="https://arxiv.org/pdf/1611.01505v2.pdf" target="_blank" rel="noopener">Eve</a></h3>
+<p>Adam的扩展,根据最近的损失的振荡情况,调整学习率.</p>
+<h2 id="二阶方法-second-order-methods">二阶方法 Second order methods</h2>
+<p>前面讨论的方法都是一阶方法(first order),更有效的方法是基于牛顿法: <span class="math display">\[
+x \leftarrow x - [H f(x)]^{-1} \nabla f(x)
+\]</span> 收敛速度更快,并且不需要超参数.然而计算Hessian矩阵的逆在时间和空间复杂度都非常高,太不切实际.因此出现了许多变种方法(<em>quasi-Newton</em> methods)来计算近似的逆矩阵值.如方法 <a href="http://en.wikipedia.org/wiki/Limited-memory_BFGS" target="_blank" rel="noopener">L-BFGS</a>,(缺点是必须在整个训练集上计算,如何让其在mini-batches上工作是当前比较活跃的研究领域)</p>
+<p>额外参考文献:</p>
+<ul>
+<li><a href="http://research.google.com/archive/large_deep_networks_nips2012.html" target="_blank" rel="noopener">Large Scale Distributed Deep Networks</a> is a paper from the Google Brain team, comparing L-BFGS and SGD variants in large-scale distributed optimization.</li>
+<li><a href="http://arxiv.org/abs/1311.2115" target="_blank" rel="noopener">SFO</a> algorithm strives to combine the advantages of SGD with advantages of L-BFGS.</li>
+</ul>
+<h2 id="梯度下降-gradient-descent">梯度下降 Gradient Descent</h2>
+<p>以线性回归为例:</p>
+<p>hyposis: <span class="math inline">\(h_\theta(x)=\sum_{j=0}^n \theta_jx_j\)</span></p>
+<p>m是样本的总数,n是参数<span class="math inline">\(\theta\)</span>的总数.</p>
+<h3 id="batch-gradient-descent">Batch gradient descent</h3>
+<p>总体loss: <span class="math inline">\(J_{\text{train}}(\theta)={1\over 2m}\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)})^2\)</span></p>
+<p>一次梯度下降所做的操作如下,重复迭代多次: <span class="math display">\[
+\theta_j:=\theta_j-\alpha{\partial\over\partial\theta_j}J_{\text{train}}(\theta) \tag{for j=1,...,n}
+\]</span></p>
+<h3 id="stochastic-gradient-descent-sgd">Stochastic Gradient Descent (SGD)</h3>
+<p>单个元素的loss: <span class="math inline">\(cost(\theta,(x^{(i)},y^{(i)}))={1\over 2}(h_\theta(x^{(i)})-y^{(i)})^2\)</span></p>
+<ol style="list-style-type: decimal">
+<li><p>对训练样本随机打乱顺序</p></li>
+<li><p>重复如下的梯度下降:</p></li>
+</ol>
+<p>for i=1,...,m{</p>
+<p>​ <span class="math inline">\(\theta_j:=\theta_j-\alpha{\partial\over\partial\theta_j}cost(\theta,(x^{(i)},y^{(i)})) \tag{for j=1,...,n}\)</span></p>
+<p>}</p>
+<p>由于一次只使用一个样本,因此多了一层循环.但是实践中很少使用，因为优化的向量运算比单个处理快。有时人们把SGD指代Mini-batch Gradient Descent（因为通常mini-batch的选择是随机的）。</p>
+<p>与Batch gradient descent相比,其收敛的曲线可能比较振荡.</p>
+<h3 id="minibatch-gradient-descent">Mini‐batch Gradient Descent</h3>
+<p>每次计算梯度只使用训练集的一小部分,常见的mini-batch大小是32/64/128（优化的向量）.例如,ILSVRC ConvNet使用256个样例.</p>
+<p>设b是mini-batch的样本数,融合Batch gradient descent与Stochastc gradient descent的思想,重复如下的梯度下降:</p>
+<p>for i=1,1+b,1+2b,...,~m{</p>
+<p>​ <span class="math inline">\(\theta_j:=\theta_j-\alpha{1\over b}\sum_{k=i}^{i+b}{\partial\over\partial\theta_j}cost(\theta,(x^{(k)},y^{(k)})) \tag{for j=1,...,n}\)</span></p>
+<p>}</p>
+<p>通过向量化的计算方式,其可能比Stochastc gradient descent计算速度更快.</p>
 
       
       
@@ -267,13 +336,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/09/30/tunnel-3/">scp 断点续传</a></p>
+        <p><span>本文标题:</span><a href="/2017/09/30/param-update/">参数更新</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 makefile 的个人博客">makefile</a></p>
         <p><span>发布时间:</span>2017年09月30日 - 00时00分</p>
-        <p><span>最后更新:</span>2018年02月06日 - 06时38分</p>
+        <p><span>最后更新:</span>2018年02月06日 - 08时23分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/09/30/tunnel-3/" title="scp 断点续传">makefile.ml/2017/09/30/tunnel-3/</a>
-            <span class="copy-path" data-clipboard-text="原文: makefile.ml/2017/09/30/tunnel-3/　　作者: makefile" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/09/30/param-update/" title="参数更新">makefile.ml/2017/09/30/param-update/</a>
+            <span class="copy-path" data-clipboard-text="原文: makefile.ml/2017/09/30/param-update/　　作者: makefile" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -286,17 +355,8 @@
 
 <nav id="article-nav">
   
-    <a href="/2017/09/30/param-update/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          参数更新
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/09/29/scp-rsync/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/09/30/tunnel-3/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">scp 断点续传</div>
       <strong class="article-nav-caption">></strong>
     </a>
@@ -308,7 +368,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#n2n"><span class="toc-number">1.</span> <span class="toc-text">n2n</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frp"><span class="toc-number">2.</span> <span class="toc-text">frp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bittorrent-sync"><span class="toc-number">3.</span> <span class="toc-text">Bittorrent Sync</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#学习率一阶"><span class="toc-number">1.</span> <span class="toc-text">学习率(一阶)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权重更新方法一阶"><span class="toc-number">2.</span> <span class="toc-text">权重更新方法(一阶)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vanilla-update"><span class="toc-number">2.1.</span> <span class="toc-text">Vanilla update</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#momentum-update"><span class="toc-number">2.2.</span> <span class="toc-text">Momentum update</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nesterovs-accelerated-momentum-nag"><span class="toc-number">2.3.</span> <span class="toc-text">Nesterov&#39;s Accelerated Momentum (NAG)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adagrad"><span class="toc-number">2.4.</span> <span class="toc-text">AdaGrad</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rmsprop"><span class="toc-number">2.5.</span> <span class="toc-text">RMSProp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#adam"><span class="toc-number">2.6.</span> <span class="toc-text">Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eve"><span class="toc-number">2.7.</span> <span class="toc-text">Eve</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二阶方法-second-order-methods"><span class="toc-number">3.</span> <span class="toc-text">二阶方法 Second order methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#梯度下降-gradient-descent"><span class="toc-number">4.</span> <span class="toc-text">梯度下降 Gradient Descent</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#batch-gradient-descent"><span class="toc-number">4.1.</span> <span class="toc-text">Batch gradient descent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stochastic-gradient-descent-sgd"><span class="toc-number">4.2.</span> <span class="toc-text">Stochastic Gradient Descent (SGD)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#minibatch-gradient-descent"><span class="toc-number">4.3.</span> <span class="toc-text">Mini‐batch Gradient Descent</span></a></li></ol></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -359,13 +419,11 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/09/30/param-update/" title="上一篇: 参数更新">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/09/29/scp-rsync/" title="下一篇: scp 断点续传">
+            <a href="/2017/09/30/tunnel-3/" title="下一篇: scp 断点续传">
                 <i class="fa fa-angle-right"></i>
             </a>
         

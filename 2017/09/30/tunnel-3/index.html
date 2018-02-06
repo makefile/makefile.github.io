@@ -3,18 +3,20 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>康行天下</title>
+  <title>scp 断点续传 | 康行天下</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="明也无涯">
-<meta property="og:type" content="website">
-<meta property="og:title" content="康行天下">
-<meta property="og:url" content="makefile.ml/index.html">
+  <meta name="description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
+<meta name="keywords" content="linux cmd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scp 断点续传">
+<meta property="og:url" content="makefile.ml/2017/09/30/tunnel-3/index.html">
 <meta property="og:site_name" content="康行天下">
-<meta property="og:description" content="明也无涯">
+<meta property="og:description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-02-06T06:38:02.456Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="康行天下">
-<meta name="twitter:description" content="明也无涯">
+<meta name="twitter:title" content="scp 断点续传">
+<meta name="twitter:description" content="在之前的两篇博文ssh反向隧道和ngrok反向隧道中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。 本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。 n2n v1版本的用法 sudo apt install -y n2n sudo edge -d edge1">
   
     <link rel="alternative" href="/atom.xml" title="康行天下" type="application/atom+xml">
   
@@ -25,9 +27,6 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  
-    
-    
   
   
       <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
@@ -40,8 +39,8 @@
           rootUrl: '/',
           fancybox: true,
           animate: ,
-          isHome: true,
-          isPost: false,
+          isHome: false,
+          isPost: true,
           isArchive: false,
           isTag: false,
           isCategory: false,
@@ -213,9 +212,7 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-tunnel-3" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-tunnel-3" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2017/09/30/tunnel-3/" class="article-date">
@@ -231,18 +228,29 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/30/tunnel-3/">scp 断点续传</a>
+    <h1 class="article-title" itemprop="name">
+      scp 断点续传
     </h1>
   
 
       </header>
       
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-cmd/">linux cmd</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
     
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p>在之前的两篇博文<a href="http://www.cnblogs.com/makefile/p/ssh-rev-tun.html" target="_blank" rel="noopener">ssh反向隧道</a>和<a href="http://www.cnblogs.com/makefile/p/ngrok.html" target="_blank" rel="noopener">ngrok反向隧道</a>中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。</p>
+        <p>在之前的两篇博文<a href="http://www.cnblogs.com/makefile/p/ssh-rev-tun.html" target="_blank" rel="noopener">ssh反向隧道</a>和<a href="http://www.cnblogs.com/makefile/p/ngrok.html" target="_blank" rel="noopener">ngrok反向隧道</a>中所使用的方式建立连接之后所有数据需要经过中间服务端的中转。这一般来说也没有什么大问题，但是当中转服务器的网速较慢时，操作反应迟钝，传递大文件时比较耗时。</p>
 <p>本文介绍n2n这个工具，其在顺利打洞之后会p2p传输数据，而失败时通过服务器中转。</p>
 <h2 id="n2n">n2n</h2>
 <p>v1版本的用法 <code>sudo apt install -y n2n</code> <code>sudo edge -d edge1 -a 10.0.0.99 -c 组名 -k 密码 -s 255.255.255.0 -l bytemark.leggewie.org:1234</code> 之前使用ipv6地址在两台主机间用scp复制文件时约7~10M/s,使用n2n的地址进行scp的速度仅能达到1M/s.说明p2p打洞没有成功。 -d 指定将要创建的本地接口， -a 是想要得到的ip，同时需要使用-s指定子网掩码 -l 指定超级节点的地址，如n2n.lu8.win:10082 来自（http://nat.red/）</p>
@@ -251,255 +259,131 @@
 <h2 id="bittorrent-sync">Bittorrent Sync</h2>
 <p>主要功能是同步，也是点对点，没有中心服务节点。</p>
 
-          
       
       
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-cmd/">linux cmd</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2017/09/30/tunnel-3/#more">继续阅读 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
     </div>
     
   </div>
   
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/09/30/tunnel-3/">scp 断点续传</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 makefile 的个人博客">makefile</a></p>
+        <p><span>发布时间:</span>2017年09月30日 - 00时00分</p>
+        <p><span>最后更新:</span>2018年02月06日 - 06时38分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/09/30/tunnel-3/" title="scp 断点续传">makefile.ml/2017/09/30/tunnel-3/</a>
+            <span class="copy-path" data-clipboard-text="原文: makefile.ml/2017/09/30/tunnel-3/　　作者: makefile" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/29/scp-rsync/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">scp 断点续传</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
 
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#n2n"><span class="toc-number">1.</span> <span class="toc-text">n2n</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frp"><span class="toc-number">2.</span> <span class="toc-text">frp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bittorrent-sync"><span class="toc-number">3.</span> <span class="toc-text">Bittorrent Sync</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
 
 
 
 
 
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
 
 
-  
-    <article id="post-scp-rsync" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/29/scp-rsync/" class="article-date">
-      <time datetime="2017-09-29T00:00:00.000Z" itemprop="datePublished">2017-09-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
+
     
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+
+
+
+    <div class="scroll" id="post-nav-button">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/29/scp-rsync/">scp 断点续传</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>scp断点续传： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -P --rsh=ssh a.file root@remote:/a.file</span><br></pre></td></tr></table></figure></p>
-
-          
-      
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-cmd/">linux cmd</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2017/09/29/scp-rsync/#more">继续阅读 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-pooling" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/28/pooling/" class="article-date">
-      <time datetime="2017-09-28T16:52:58.000Z" itemprop="datePublished">2017-09-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/28/pooling/">深度学习网络层之 Pooling</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>pooling 是仿照人的视觉系统进行降维（降采样），用更高层的抽象表示图像特征，这一部分内容从Hubel&amp;wiesel视觉神经研究到Fukushima提出，再到LeCun的LeNet5首次采用并使用BP进行求解，是一条线上的内容，原始推动力其实就是仿生，仿照真正的神经网络构建人工网络。 至于pooling为什么可以这样做，是因为：我们之所以决定使用卷积后的特征是因为图像具有一种“静态性”的属性，这也就意味着在一个图像区域有用的特征极有可能在另一个区域同样适用。因此，为了描述大的图像，一个很自然的想法就是对不同位置的特征进行聚合统计。这个均值或者最大值就是一种聚合统计的方法。 做窗口滑动卷积的时候，卷积值就代表了整个窗口的特征。因为滑动的窗口间有大量重叠区域，出来的卷积值有冗余，进行最大pooling或者平均pooling就是减少冗余。减少冗余的同时，pooling也丢掉了局部位置信息，所以局部有微小形变，结果也是一样的。 pooling层通常的作用是:减少空间大小,减少网络参数,防止过拟合。</p>
-</blockquote>
-<h2 id="pooling-种类">pooling 种类</h2>
-<p>最常见的池化操作为最大池化和平均池化：</p>
-<h3 id="最大池化-max-pooling">最大池化 Max Pooling</h3>
-<p>前向传播：选图像区域的最大值作为该区域池化后的值。 反向传播：梯度通过最大值的位置传播，其它位置梯度为0。</p>
-<h3 id="平均池化-average-pooling也称mean-pooling">平均池化 Average Pooling（也称mean pooling）</h3>
-<p>前向传播：计算图像区域的平均值作为该区域池化后的值。 反向传播：梯度取均值后分给每个位置。 对于Average Pooling的输入<span class="math inline">\(X=x_1,x_2,...x_n\)</span>，输出<span class="math inline">\(\displaystyle f(X) = \frac{1}{n} \sum_{i=1}^n x_i\)</span> <span class="math display">\[
-\begin{align}
-\displaystyle \frac{\partial f}{\partial x_j} (X)  = \frac{\partial f}{\partial x_j} \frac{1}{n} \sum_{i=1}^n x_i \\
-\displaystyle = \frac{1}{n} \sum_{i=1}^n  \frac{\partial f}{\partial x_j} x_i \\
-\displaystyle = \frac{1}{n} \sum_{i=1}^n \delta(i-j) \\
-当i=j时，δ(x)=1，否则为0.
-\end{align}
-\]</span></p>
-<h3 id="stochastic-pooling">Stochastic Pooling</h3>
-<p>论文<a href="https://arxiv.org/abs/1301.3557" target="_blank" rel="noopener">Stochastic Pooling for Regularization of Deep Convolutional Neural Networks</a>提出了一种简单有效的正则化CNN的方法,能够降低max pooling的过拟合现象，提高泛化能力。对于pooling层的输入，根据输入的多项式分布随机选择一个值作为输出。训练阶段和测试阶段的操作略有不同。</p>
-<p><strong>训练阶段</strong></p>
-          
-      
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Deep-Learning/">Deep Learning</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2017/09/28/pooling/#more">继续阅读 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/28/hello-world/" class="article-date">
-      <time datetime="2017-09-28T15:46:58.000Z" itemprop="datePublished">2017-09-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/28/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-          
-      
-      
+            <a href="/2017/09/29/scp-rsync/" title="下一篇: scp 断点续传">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
     </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-        <p class="article-more-link">
-          <a  href="/2017/09/28/hello-world/#more">继续阅读 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/tunnel-3/">scp 断点续传</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/scp-rsync/">scp 断点续传</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/28/pooling/">深度学习网络层之 Pooling</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/28/hello-world/">Hello World</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
 
 
 
-
-
-  
-  
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
